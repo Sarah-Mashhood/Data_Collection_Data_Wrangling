@@ -1,7 +1,7 @@
 ---
 title: "Data Collection and Data Wrangling"
-author: "Sana Rasheed"
-date: "July 19, 2020"
+author: "Sarah Mashhood"
+date: "October 10, 2020"
 output: html_document
 ---
 
@@ -30,21 +30,25 @@ USPersonalExpenditure
 
 ```{r }
 ### start solution ####
+library('dplyr')
+```
+
+
+```{r }
+library(data.table)
+Data <- data.table(USPersonalExpenditure)
+Data
 ```
 
 
 ```{r }
 
+summarise_all(Data, list(~mean(.), ~sd(.)))
 ```
 
 
 ```{r }
-
-```
-
-
-```{r }
-
+Data %>% mutate(AverageValues = rowMeans(Data))
 ```
 
 
@@ -68,26 +72,31 @@ filename <- "msleep_ggplot2.csv"
 
 ```{r }
 ### start solution ####
+file <- read.csv(url)
+head(file)
 ```
 
 
 ```{r }
-
+task1 <- file  %>% group_by(genus , order) %>% mutate(average_bodywt = mean(bodywt)) %>% select(genus , order,average_bodywt)
+task1
 ```
 
 
 ```{r }
-
+task2 <- data.frame(file %>%  group_by(genus , order) %>% mutate(average_REM_sleep = mean(sleep_rem, na.rm = TRUE)) %>% select(genus , order, sleep_rem, average_REM_sleep))
+task2
 ```
 
 
 ```{r }
-
+task3 <- colSums(is.na(file))
+task3
 ```
 
 
 ```{r }
-
+### task 4: In my opinion imputation of missing values using group by mean/median/mode would be better because different groups (orders, genus etc) have diffeent characteristic and values of other variables  
 ```
 
 
@@ -111,26 +120,38 @@ filename <- "msleep_ggplot2.csv"
 
 
 ```{r }
+res1 <- file %>% select(name, order, sleep_total, sleep_rem)%>% filter(order %in% c('Carnivora', 'Primates'))%>% group_by(order) %>% mutate(Avg_REM_Sleep= mean(sleep_rem, na.rm = TRUE), Total_Avg_Sleep= mean(sleep_total, na.rm = TRUE))
+res1
+```
+
+
+```{r }
+library(tidyr)
+spread(file,order,name)
+spread(file,order,genus)
+spread(file,order,vore)
+spread(file,order,conservation)
+spread(file,order,sleep_total)
+spread(file,order,sleep_rem)
+spread(file,order,sleep_cycle)
+spread(file,order,awake)
+spread(file,order,brainwt)
+spread(file,order,bodywt)
+```
+
+
+```{r }
+for (name in names(file)){
+  spread(file,order,name)
+}
 
 ```
 
 
 ```{r }
-
-```
-
-
-```{r }
-
-```
-
-
-```{r }
-
-```
-
-
-```{r }
+for (name in names(file)){
+  print(paste(name))
+}
 
 ```
 
